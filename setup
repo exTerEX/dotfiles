@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Let script exit when a command fail
+set -e
+
+### Variables
+DOTFILES=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
+### Zsh / Oh-my-zsh
+if [ -z "$ZSH_VERSION" ]; then
+    sudo apt -y install --no-install-recommends zsh
+    sudo chsh -s /usr/bin/zsh $(whoami)
+fi
+
+if [ ! -z "$ZSH_VERSION" ]; then
+    ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
+    chown -h $(whoami):$(whoami) $HOME/.zshrc
+
+    URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        sh -c "$(curl -fsSL $URL)" "" --unattended
+    fi
+
+    rm .bash_logout .bash_history .bashrc
+fi
+
+### System
+ln -sf $DOTFILES/.profile $HOME/.profile
+chown -h $(whoami):$(whoami) $HOME/.profile
+
+exec zsh; source $HOME/.zshrc
