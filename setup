@@ -3,29 +3,45 @@
 # Let script exit when a command fail
 set -e
 
-### Variables
-DOTFILES=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-
-### Zsh / Oh-my-zsh
-if [ -z "$ZSH_VERSION" ]; then
-    sudo apt -y install --no-install-recommends zsh
-    sudo chsh -s /usr/bin/zsh $(whoami)
+### Check if bash is present in the system
+if [ -z "$BASH_VERSION" ]; then
+    echo "No version of bash is installed on this system. Exit..."
+    exit 0
 fi
 
-if [ ! -z "$ZSH_VERSION" ]; then
-    ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
-    chown -h $(whoami):$(whoami) $HOME/.zshrc
+### Install oh-my-bash
+ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
+chown -h $(whoami):$(whoami) $HOME/.zshrc
 
-    URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-    if [ ! -d "$HOME/.oh-my-zsh" ]; then
-        sh -c "$(curl -fsSL $URL)" "" --unattended
-    fi
-
-    rm .bash_logout .bash_history .bashrc
+URL="https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh"
+if [ ! -d "$HOME/.oh-my-bash" ]; then
+    bash -c "$(wget $URL -O -)" "" --unattended
 fi
 
-### System
-ln -sf $DOTFILES/.profile $HOME/.profile
+rm .bash_logout .bash_history .bashrc
+
+### Link setting files
+
+# TODO: Check if previous file exists
+
+# System
+ln -sf $(pwd)/.profile $HOME/.profile
 chown -h $(whoami):$(whoami) $HOME/.profile
 
-exec zsh; source $HOME/.zshrc
+# Bash
+ln -s $(pwd)/.bash_logout $HOME/.bash_logout #
+chown -h $(whoami):$(whoami) $HOME/.bash_logout
+ln -s $(pwd)/.bash_profile $HOME/.bash_profile #
+chown -h $(whoami):$(whoami) $HOME/.bash_profile
+ln -s $(pwd)/.bashrc $HOME/.bashrc #
+chown -h $(whoami):$(whoami) $HOME/.bashrc
+
+# Anaconda
+ln -s $(pwd)/.condarc $HOME/.condarc #
+chown -h $(whoami):$(whoami) $HOME/.condarc
+
+### System
+mkdir -p $HOME/bin $HOME/repo $HOME/
+
+### Restart shell
+exec bash; source $HOME/.bashrc
