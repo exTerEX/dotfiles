@@ -158,3 +158,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# Ensure GPG signing capability in CLI
+export GPG_TTY=$(tty)
