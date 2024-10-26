@@ -1,6 +1,9 @@
 [user]
 	name = exTerEX
 	email = 30706568+exTerEX@users.noreply.github.com
+	singingkey = B0C04CF48CEB0CAB
+[commit]
+	gpgsign = true
 [init]
 	defaultBranch = main
 [github]
