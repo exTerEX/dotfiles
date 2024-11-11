@@ -20,6 +20,9 @@ fi
 
 rm .bash_logout .bash_history .bashrc
 
+### DIRS
+mkdir -p ~/.apptainer/bins ~/repo $HOME/bin $HOME/repo
+
 ### Link setting files
 
 # TODO: Check if previous file exists
@@ -39,9 +42,6 @@ chown -h $(whoami):$(whoami) $HOME/.bashrc
 # Anaconda
 ln -s $(pwd)/.condarc $HOME/.condarc #
 chown -h $(whoami):$(whoami) $HOME/.condarc
-
-### System
-mkdir -p $HOME/bin $HOME/repo $HOME/
 
 ### Restart shell
 exec bash; source $HOME/.bashrc
